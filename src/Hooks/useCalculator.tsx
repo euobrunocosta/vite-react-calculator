@@ -21,13 +21,13 @@ const CalculatorProvider = ({ children }: CalculatorProviderProps) => {
   const [currentOperator, setCurrentOperator] = useState<ButtonLabels>()
 
   const handleNumberClick = (label: ButtonLabels) => {
-    if (displayValue.length === 14) return
-
     if (shouldReplace) {
       setDisplayValue(String(label))
       setShouldReplace(false)
       return
     }
+
+    if (displayValue.length === 14) return
 
     setDisplayValue(
       Boolean(Number(displayValue)) ? `${displayValue}${label}` : String(label)
@@ -51,9 +51,9 @@ const CalculatorProvider = ({ children }: CalculatorProviderProps) => {
 
   const handleEqualClick = () => {
     if (!currentOperator || !storedValue || !Number(displayValue)) return
-    // console.log(`${storedValue}${currentOperator}${currentOperator}`)
     const result: number = eval(`${storedValue}${currentOperator}${displayValue}`)
-    setDisplayValue(String(result))
+    const roundedResult = Math.round((result + Number.EPSILON) * 1000) / 1000
+    setDisplayValue(String(roundedResult))
     setStoredValue('')
     setCurrentOperator(undefined)
   }
